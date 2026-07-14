@@ -341,6 +341,7 @@ namespace StarterAssets
 			{
 				elapsed += Time.deltaTime * animationSpeed;
 				cigarette.transform.localPosition = Vector3.Lerp(new Vector3(0, -0.14f, 0.446f), new Vector3(0, -0.34f, 0.446f), elapsed);
+				transform.Rotate(-Vector3.right * Time.deltaTime * 20);
 				yield return null;
 			}
 
@@ -349,6 +350,14 @@ namespace StarterAssets
 			}
 
 			cigarette.transform.localPosition = new Vector3(0, -0.34f, 0.446f);
+			yield return new WaitForSeconds(0.8f);
+			elapsed = 0f;
+			while (elapsed < 1f)
+			{
+				elapsed += Time.deltaTime * animationSpeed;
+				transform.Rotate(Vector3.right * Time.deltaTime * 20);
+				yield return null;
+			}
 
 			//health += healAmount;
 			//health = Mathf.Clamp(health, 0, maxHealth);
