@@ -64,7 +64,9 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
+		private Vector2 perlinOffset1, perlinOffset2;
+		private float time = 0;
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -97,6 +99,8 @@ namespace StarterAssets
 
 		private void Start()
 		{
+			perlinOffset1 = new Vector2(Random.value * 1000f, Random.value * 1000f);
+			perlinOffset2 = new Vector2(Random.value * 1000f, Random.value * 1000f);
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
@@ -112,6 +116,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			time += Time.deltaTime;
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
@@ -194,8 +199,14 @@ namespace StarterAssets
 				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 			}
 
+			float xOffset = (Mathf.PerlinNoise(perlinOffset1.x, perlinOffset1.y + time) - 0.5f) * 2f;
+			float yOffset = (Mathf.PerlinNoise(perlinOffset2.x, perlinOffset2.y + time) - 0.5f) * 2f;
+			xOffset = Mathf.Pow(Mathf.Abs(xOffset), 2) * Mathf.Sign(xOffset);
+			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 2) * Mathf.Sign(yOffset);
+			Vector3 drunkenMovement = new Vector3(xOffset * 1.5f, 0.0f, yOffset * 1.5f) * Time.deltaTime;
+
 			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+			_controller.Move(drunkenMovement + inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
 		private void JumpAndGravity()
