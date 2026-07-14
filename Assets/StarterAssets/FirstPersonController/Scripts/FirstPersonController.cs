@@ -54,6 +54,7 @@ namespace StarterAssets
 
 		[Header("Smoking")]
 		public GameObject cigarette;
+		public ParticleSystem smokeParticles;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 1f)]
@@ -323,11 +324,6 @@ namespace StarterAssets
 
 			yield return new WaitForSeconds(0.8f);
 
-			//if (smokeParticles != null)
-			//{
-			//	smokeParticles.Play();
-			//}
-
 			// Move cigarette DOWN
 			elapsed = 0f;
 			while (elapsed < 1f)
@@ -335,6 +331,10 @@ namespace StarterAssets
 				elapsed += Time.deltaTime * animationSpeed;
 				cigarette.transform.localPosition = Vector3.Lerp(new Vector3(0, -0.14f, 0.446f), new Vector3(0, -0.34f, 0.446f), elapsed);
 				yield return null;
+			}
+
+			if (smokeParticles != null) {
+				smokeParticles.Play();
 			}
 
 			cigarette.transform.localPosition = new Vector3(0, -0.34f, 0.446f);
