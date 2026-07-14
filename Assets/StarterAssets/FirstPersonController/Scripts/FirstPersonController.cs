@@ -58,6 +58,7 @@ namespace StarterAssets
 
 		public AudioSource audioSource;
 		public AudioClip smokeSound, smokeSoundLong;
+		public AudioClip[] stepSounds;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 1f)]
@@ -228,7 +229,7 @@ namespace StarterAssets
 			float xOffset = (Mathf.PerlinNoise(perlinOffset1.x, perlinOffset1.y + time) - 0.5f) * 2f;
 			float yOffset = (Mathf.PerlinNoise(perlinOffset2.x, perlinOffset2.y + time) - 0.5f) * 2f;
 			xOffset = Mathf.Pow(Mathf.Abs(xOffset), 2) * Mathf.Sign(xOffset);
-			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 4) * Mathf.Sign(yOffset);
+			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 2) * Mathf.Sign(yOffset);
 			Vector3 drunkenMovement = new Vector3(xOffset, 0.0f, yOffset) * Drunkenness;
 
 			// move the player
@@ -240,7 +241,20 @@ namespace StarterAssets
 			// Target roll: lean camera into the direction of motion (e.g. moving right -> lean right / negative Z rotation)
 			float targetRoll = -lateralSpeed * LeanIntensity;
 			_cameraRoll = Mathf.Lerp(_cameraRoll, targetRoll, Time.deltaTime * LeanSmoothSpeed);
+
+			speedCounter += (drunkenMovement * Time.deltaTime + inputDirection.normalized * (_speed * Time.deltaTime)).magnitude;
+			if (speedCounter > 1.8f) {
+				audioSource.PlayOneShot(stepSounds[Random.Range(0, stepSounds.Length)]);
+				// Play audio faster if we're stepping quickly (drunk)
+				if ((drunkenMovement + inputDirection.normalized).magnitude > 1.25f) {
+					speedCounter -= 0.9f;
+				} else {
+					speedCounter -= 1.8f;
+				}
+			}
 		}
+
+		float speedCounter = 0;
 
 		private void JumpAndGravity()
 		{

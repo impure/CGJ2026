@@ -6455,6 +6455,46 @@ PrefabInstance:
       propertyPath: GroundLayers.m_Bits
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: stepSounds.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: f21861f5c276d47d8a3fce2007cf3377, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 254d894e1c5794f3b980fd12fc5ee73e, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 4501cd1bb27e04928bbea48463a3f1a6, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 361338db8927a4961b7c8d67f10d1f90, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8300000, guid: c5d471da9a0424bd2983bf8b12fb7e86, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[5]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 500b8f11203734ec8ae3b1376e251509, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[6]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 5a607f3040eac437792cddf0d476ebe3, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[7]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 0e38462e3e03b428b956107bdcef490b, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: 'stepSounds.Array.data[8]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 43e9b11613856470887f1eaad46d94c1, type: 3}
     - target: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_Name
       value: PlayerCapsule
