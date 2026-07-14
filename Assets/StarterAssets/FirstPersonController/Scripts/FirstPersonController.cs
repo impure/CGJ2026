@@ -62,7 +62,7 @@ namespace StarterAssets
 		public AudioClip[] hitSounds;
 
 		[Header("Drunken Settings")]
-		[Range(0f, 1f)]
+		[Range(0f, 5f)]
 		[Tooltip("Controls the intensity of all drunken effects (0 = off, 1 = max)")]
 		public float Drunkenness = 1.0f;
 
