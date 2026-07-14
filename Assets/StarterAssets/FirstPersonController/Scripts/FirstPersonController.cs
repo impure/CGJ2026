@@ -59,6 +59,7 @@ namespace StarterAssets
 		public AudioSource audioSource;
 		public AudioClip smokeSound, smokeSoundLong;
 		public AudioClip[] stepSounds;
+		public AudioClip[] hitSounds;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 1f)]
@@ -98,6 +99,27 @@ namespace StarterAssets
 		private const float _threshold = 0.01f;
 
 		private bool isSmoking = false;
+
+		private float hitCooldown = 2.5f;
+		private float lastHitTime = 0f;
+
+		void OnControllerColliderHit(ControllerColliderHit hit) {
+			// 1. If we recently hit a wall, don't play the sound again yet (cooldown check)
+			if (Time.time < lastHitTime + hitCooldown) return;
+
+			// 2. Filter out the floor.
+			// The 'normal.y' represents how flat/vertical the surface is.
+			// A floor has a high Y normal (0.7 to 1.0). A wall has a flat Y normal (close to 0).
+			if (Mathf.Abs(hit.normal.y) < 0.2f)
+			{
+				// 3. Play the sound
+				if (audioSource != null && hitSounds.Length > 0)
+				{
+					audioSource.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length)]);
+					lastHitTime = Time.time; // Reset the cooldown timer
+				}
+			}
+		}
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -168,7 +190,7 @@ namespace StarterAssets
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 
@@ -237,7 +259,7 @@ namespace StarterAssets
 
 			// Calculate lateral speed relative to the player's facing direction
 			float lateralSpeed = Vector3.Dot(drunkenMovement + inputDirection.normalized * _speed, transform.right);
-			
+
 			// Target roll: lean camera into the direction of motion (e.g. moving right -> lean right / negative Z rotation)
 			float targetRoll = -lateralSpeed * LeanIntensity;
 			_cameraRoll = Mathf.Lerp(_cameraRoll, targetRoll, Time.deltaTime * LeanSmoothSpeed);
