@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -51,8 +51,15 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		[Header("Drunken Camera Lean")]
+		[Tooltip("How much the camera rolls/tilts when moving sideways")]
+		public float LeanIntensity = 1f;
+		[Tooltip("How fast the camera tilts and recovers")]
+		public float LeanSmoothSpeed = 2.0f;
+
 		// cinemachine
 		private float _cinemachineTargetPitch;
+		private float _cameraRoll;
 
 		// player
 		private float _speed;
@@ -148,12 +155,12 @@ namespace StarterAssets
 				// clamp our pitch rotation
 				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
-
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
+
+			// Update Cinemachine camera target pitch and roll
+			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, _cameraRoll);
 		}
 
 		private void Move()
@@ -207,6 +214,13 @@ namespace StarterAssets
 
 			// move the player
 			_controller.Move(drunkenMovement * Time.deltaTime + inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+			// Calculate lateral speed relative to the player's facing direction
+			float lateralSpeed = Vector3.Dot(drunkenMovement + inputDirection.normalized * _speed, transform.right);
+			
+			// Target roll: lean camera into the direction of motion (e.g. moving right -> lean right / negative Z rotation)
+			float targetRoll = -lateralSpeed * LeanIntensity;
+			_cameraRoll = Mathf.Lerp(_cameraRoll, targetRoll, Time.deltaTime * LeanSmoothSpeed);
 		}
 
 		private void JumpAndGravity()
