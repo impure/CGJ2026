@@ -121,6 +121,14 @@ namespace StarterAssets
 			}
 		}
 
+		public void TryToSmoke()
+		{
+			if (!isSmoking)
+			{
+				StartCoroutine(SmokeRoutine());
+			}
+		}
+
 		private bool IsCurrentDeviceMouse
 		{
 			get
