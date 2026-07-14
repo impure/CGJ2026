@@ -116,7 +116,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			time += Time.deltaTime;
+			time += Time.deltaTime * 2;
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
@@ -202,11 +202,11 @@ namespace StarterAssets
 			float xOffset = (Mathf.PerlinNoise(perlinOffset1.x, perlinOffset1.y + time) - 0.5f) * 2f;
 			float yOffset = (Mathf.PerlinNoise(perlinOffset2.x, perlinOffset2.y + time) - 0.5f) * 2f;
 			xOffset = Mathf.Pow(Mathf.Abs(xOffset), 2) * Mathf.Sign(xOffset);
-			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 2) * Mathf.Sign(yOffset);
-			Vector3 drunkenMovement = new Vector3(xOffset * 1.5f, 0.0f, yOffset * 1.5f) * Time.deltaTime;
+			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 4) * Mathf.Sign(yOffset);
+			Vector3 drunkenMovement = new Vector3(xOffset, 0.0f, yOffset);
 
 			// move the player
-			_controller.Move(drunkenMovement + inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+			_controller.Move(drunkenMovement * Time.deltaTime + inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
 		private void JumpAndGravity()
