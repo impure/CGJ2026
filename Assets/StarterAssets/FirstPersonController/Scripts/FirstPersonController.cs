@@ -2,6 +2,7 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
+using System.Collections;
 
 namespace StarterAssets
 {
@@ -51,6 +52,9 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		[Header("Smoking")]
+		public GameObject cigarette;
+
 		[Header("Drunken Settings")]
 		[Range(0f, 1f)]
 		[Tooltip("Controls the intensity of all drunken effects (0 = off, 1 = max)")]
@@ -87,6 +91,8 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
+
+		private bool isSmoking = false;
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -132,6 +138,10 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
+			if (Input.GetKeyDown(KeyCode.F) && !isSmoking) {
+				StartCoroutine(SmokeRoutine());
+			}
 		}
 
 		private void LateUpdate()
@@ -293,6 +303,53 @@ namespace StarterAssets
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+		float animationSpeed = 1;
+
+		IEnumerator SmokeRoutine() {
+			isSmoking = true;
+
+			// Move cigarette UP
+			float elapsed = 0f;
+			while (elapsed < 1f)
+			{
+				elapsed += Time.deltaTime * animationSpeed;
+				cigarette.transform.localPosition = Vector3.Lerp(new Vector3(0, -0.34f, 0.446f), new Vector3(0, -0.14f, 0.446f), elapsed);
+				yield return null;
+			}
+
+			cigarette.transform.localPosition = new Vector3(0, -0.14f, 0.446f);
+
+			yield return new WaitForSeconds(0.8f);
+
+			//if (smokeParticles != null)
+			//{
+			//	smokeParticles.Play();
+			//}
+
+			// Move cigarette DOWN
+			elapsed = 0f;
+			while (elapsed < 1f)
+			{
+				elapsed += Time.deltaTime * animationSpeed;
+				cigarette.transform.localPosition = Vector3.Lerp(new Vector3(0, -0.14f, 0.446f), new Vector3(0, -0.34f, 0.446f), elapsed);
+				yield return null;
+			}
+
+			cigarette.transform.localPosition = new Vector3(0, -0.34f, 0.446f);
+
+			//health += healAmount;
+			//health = Mathf.Clamp(health, 0, maxHealth);
+
+			Drunkenness += 0.2f;
+			Debug.Log("Drunkenness: " + Drunkenness);
+
+			//intoxication += intoxicationAmount;
+			//intoxication = Mathf.Clamp(intoxication, 0, maxIntoxication);
+
+			//Debug.Log("Smoked! Health: " + health + " | Intoxication: " + intoxication);
+			isSmoking = false;
 		}
 	}
 }
