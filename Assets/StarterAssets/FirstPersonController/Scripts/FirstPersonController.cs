@@ -56,6 +56,9 @@ namespace StarterAssets
 		public GameObject cigarette;
 		public ParticleSystem smokeParticles;
 
+		public AudioSource audioSource;
+		public AudioClip smokeSound, smokeSoundLong;
+
 		[Header("Drunken Settings")]
 		[Range(0f, 1f)]
 		[Tooltip("Controls the intensity of all drunken effects (0 = off, 1 = max)")]
@@ -322,7 +325,15 @@ namespace StarterAssets
 
 			cigarette.transform.localPosition = new Vector3(0, -0.14f, 0.446f);
 
-			yield return new WaitForSeconds(0.8f);
+			if (audioSource != null && smokeSound != null) {
+				if (smokeSoundLong != null && Drunkenness >= 1) {
+					audioSource.PlayOneShot(smokeSoundLong);
+				} else {
+					audioSource.PlayOneShot(smokeSound);
+				}
+			}
+
+			yield return new WaitForSeconds(1.8f);
 
 			// Move cigarette DOWN
 			elapsed = 0f;
