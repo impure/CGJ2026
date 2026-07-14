@@ -51,6 +51,11 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		[Header("Drunken Settings")]
+		[Range(0f, 1f)]
+		[Tooltip("Controls the intensity of all drunken effects (0 = off, 1 = max)")]
+		public float Drunkenness = 1.0f;
+
 		[Header("Drunken Camera Lean")]
 		[Tooltip("How much the camera rolls/tilts when moving sideways")]
 		public float LeanIntensity = 1f;
@@ -160,7 +165,7 @@ namespace StarterAssets
 			}
 
 			// Update Cinemachine camera target pitch and roll
-			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, _cameraRoll);
+			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, _cameraRoll * Drunkenness);
 		}
 
 		private void Move()
@@ -210,7 +215,7 @@ namespace StarterAssets
 			float yOffset = (Mathf.PerlinNoise(perlinOffset2.x, perlinOffset2.y + time) - 0.5f) * 2f;
 			xOffset = Mathf.Pow(Mathf.Abs(xOffset), 2) * Mathf.Sign(xOffset);
 			yOffset = Mathf.Pow(Mathf.Abs(yOffset), 4) * Mathf.Sign(yOffset);
-			Vector3 drunkenMovement = new Vector3(xOffset, 0.0f, yOffset);
+			Vector3 drunkenMovement = new Vector3(xOffset, 0.0f, yOffset) * Drunkenness;
 
 			// move the player
 			_controller.Move(drunkenMovement * Time.deltaTime + inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
