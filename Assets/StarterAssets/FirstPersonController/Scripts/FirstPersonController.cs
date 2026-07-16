@@ -492,6 +492,7 @@ namespace StarterAssets
 
 			Drunkenness += 0.2f;
 			Debug.Log("Drunkenness: " + Drunkenness);
+			audioSource.pitch = 1 - 0.5f/(1+Drunkenness);
 
 			//intoxication += intoxicationAmount;
 			//intoxication = Mathf.Clamp(intoxication, 0, maxIntoxication);
