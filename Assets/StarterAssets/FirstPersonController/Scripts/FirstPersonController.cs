@@ -60,6 +60,7 @@ namespace StarterAssets
 		public AudioClip smokeSound, smokeSoundLong;
 		public AudioClip[] stepSounds;
 		public AudioClip[] hitSounds;
+		public AudioClip gunshotSound;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 5f)]
