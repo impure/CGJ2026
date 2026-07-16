@@ -6652,6 +6652,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 135756641613574980}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: reloadSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e0be0317613c14679a450363676599c4, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: gunTransform
+      value: 
+      objectReference: {fileID: 1037154461}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: gunshotSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 3d54e77c11e444f688322cd93347cdae, type: 3}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: LeanIntensity
       value: 1
       objectReference: {fileID: 0}
@@ -6659,6 +6671,10 @@ PrefabInstance:
       propertyPath: RotationSpeed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: dryFiringSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2968dc1ccef1e49d19e8ab942909bc63, type: 3}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: smokeParticles
       value: 

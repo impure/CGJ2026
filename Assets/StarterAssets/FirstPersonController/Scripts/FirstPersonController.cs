@@ -61,6 +61,9 @@ namespace StarterAssets
 		public AudioClip[] stepSounds;
 		public AudioClip[] hitSounds;
 		public AudioClip gunshotSound;
+		public AudioClip dryFiringSound;
+		public AudioClip reloadSound;
+		public Transform gunTransform;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 5f)]
@@ -99,7 +102,7 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
-		private bool isSmoking = false;
+		private bool smoking = false, reloading = false;
 
 		private float hitCooldown = 2.5f;
 		private float lastHitTime = 0f;
@@ -124,7 +127,7 @@ namespace StarterAssets
 
 		public void TryToSmoke()
 		{
-			if (!isSmoking)
+			if (!smoking)
 			{
 				StartCoroutine(SmokeRoutine());
 			}
@@ -175,9 +178,89 @@ namespace StarterAssets
 			GroundedCheck();
 			Move();
 
-			if (Input.GetKeyDown(KeyCode.F) && !isSmoking) {
+			if (Input.GetKeyDown(KeyCode.F) && !smoking) {
 				StartCoroutine(SmokeRoutine());
 			}
+
+			if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
+				TryShoot();
+			}
+
+			if (Input.GetKeyDown(KeyCode.R) && !smoking && !reloading) {
+				TryReload();
+			}
+		}
+
+		private int bulletsInGun = 9;
+		private int bulletsTotal = 9;
+		private float reloadTime = 1.5f;
+
+		public void TryShoot() {
+			if (!reloading && !smoking) {
+				if (bulletsInGun <= 0) {
+					if (audioSource != null) {
+						if (dryFiringSound != null) {
+							audioSource.PlayOneShot(dryFiringSound);
+						}
+					}
+				} else {
+					bulletsInGun--;
+					if (audioSource != null) {
+						if (gunshotSound != null) {
+							audioSource.PlayOneShot(gunshotSound);
+						}
+					}
+				}
+			}
+		}
+
+		public void TryReload() {
+			if (!reloading && !smoking) {
+				if (bulletsInGun < 9) {
+					StartCoroutine(ReloadRoutine());
+				}
+			}
+		}
+
+		IEnumerator ReloadRoutine() {
+			reloading = true;
+
+			// 1. Play the reloading sound effect
+			if (audioSource != null && reloadSound != null) {
+				audioSource.PlayOneShot(reloadSound);
+			}
+
+			// 2. Visually tilt the gun down slightly to show we are reloading
+			float elapsed = 0f;
+			Quaternion idleRotation = Quaternion.identity;
+			Quaternion reloadRotation = Quaternion.Euler(30f, 0f, 0f);
+			Vector3 originalPosition = gunTransform.localPosition;
+			Vector3 reloadPosition = originalPosition - new Vector3(-0.1f, 0.15f, 0.1f);
+
+			while (elapsed < 1f) {
+				elapsed += Time.deltaTime * (1f / (reloadTime * 0.3f)); // Tilt down quickly (30% of reload time)
+				gunTransform.localRotation = Quaternion.Slerp(idleRotation, reloadRotation, elapsed);
+				gunTransform.localPosition = Vector3.Lerp(originalPosition, reloadPosition, elapsed);
+				yield return null;
+			}
+
+			// 3. Wait in the tilted position (simulating putting bullets in)
+			yield return new WaitForSeconds(2.8f);
+
+			// 4. Snap the gun back up to ready position
+			elapsed = 0f;
+			while (elapsed < 1f) {
+				elapsed += Time.deltaTime * (1f / (reloadTime * 0.3f)); // Snap back up quickly (30% of reload time)
+				gunTransform.localRotation = Quaternion.Slerp(reloadRotation, idleRotation, elapsed);
+				gunTransform.localPosition = Vector3.Lerp(reloadPosition, originalPosition, elapsed);
+				yield return null;
+			}
+
+			// Ensure rotation is perfectly reset to default
+			gunTransform.localRotation = idleRotation;
+
+			bulletsInGun = bulletsTotal;
+			reloading = false;
 		}
 
 		private void LateUpdate()
@@ -357,7 +440,7 @@ namespace StarterAssets
 		float animationSpeed = 1;
 
 		IEnumerator SmokeRoutine() {
-			isSmoking = true;
+			smoking = true;
 
 			// Move cigarette UP
 			float elapsed = 0f;
@@ -414,7 +497,7 @@ namespace StarterAssets
 			//intoxication = Mathf.Clamp(intoxication, 0, maxIntoxication);
 
 			//Debug.Log("Smoked! Health: " + health + " | Intoxication: " + intoxication);
-			isSmoking = false;
+			smoking = false;
 		}
 	}
 }
