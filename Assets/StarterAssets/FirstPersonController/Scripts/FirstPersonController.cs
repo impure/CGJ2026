@@ -273,6 +273,27 @@ namespace StarterAssets {
 						StopCoroutine(_flinchCoroutine);
 					}
 					_flinchCoroutine = StartCoroutine(FlinchEffect());
+
+					// Raycast to check for enemy hit
+					if (_mainCamera != null) {
+						Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+						RaycastHit hit;
+						if (Physics.Raycast(ray, out hit)) {
+							if (hit.collider.CompareTag("Enemy")) {
+								StationaryBandit bandit = hit.collider.GetComponent<StationaryBandit>();
+								if (bandit == null) {
+									bandit = hit.collider.GetComponentInParent<StationaryBandit>();
+								}
+								if (bandit != null) {
+									bandit.health--;
+									Debug.Log("Hit Enemy! Enemy health: " + bandit.health);
+									if (bandit.health <= 0) {
+										Destroy(bandit.gameObject);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}

@@ -19,6 +19,8 @@ public class StationaryBandit : MonoBehaviour
 
 	private float lastShotTime = 0f;
 
+	public int health = 1;
+
 	void Start()
 	{
 		// Automatically find the player using their Tag (makes spawning multiple bandits easy!)
