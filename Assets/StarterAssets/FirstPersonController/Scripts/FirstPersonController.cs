@@ -269,6 +269,10 @@ namespace StarterAssets {
 							audioSource.PlayOneShot(gunshotSound);
 						}
 					}
+					if (_flinchCoroutine != null) {
+						StopCoroutine(_flinchCoroutine);
+					}
+					_flinchCoroutine = StartCoroutine(FlinchEffect());
 				}
 			}
 		}
