@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -64,6 +65,7 @@ namespace StarterAssets {
 		public AudioClip dryFiringSound;
 		public AudioClip reloadSound;
 		public Transform gunTransform;
+		public TextMeshProUGUI text;
 
 		[Header("Drunken Settings")]
 		[Range(0f, 5f)]
@@ -117,6 +119,12 @@ namespace StarterAssets {
 		public GameObject hurtText;
 		public Image strawberryJam;
 		private float health = 100;
+		private int enemies = 5;
+		private int cigs = 3;
+
+		void updateText() {
+			text.text = "Enemies Remaioning: " + enemies + "\nHealth: " + health + "\nCigs Remaining: " + cigs;
+		}
 
 		void OnControllerColliderHit(ControllerColliderHit hit) {
 			// 1. If we recently hit a wall, don't play the sound again yet (cooldown check)
@@ -167,6 +175,7 @@ namespace StarterAssets {
 		}
 
 		private void updateHealthUi() {
+			updateText();
 			strawberryJam.color = new Color(1f, 0f, 0f, 0.5f - 0.5f*health / 100f);
 			if (health <= 50) {
 				hurtText.SetActive(true);
@@ -289,6 +298,8 @@ namespace StarterAssets {
 									Debug.Log("Hit Enemy! Enemy health: " + bandit.health);
 									if (bandit.health <= 0) {
 										Destroy(bandit.gameObject);
+										enemies--;
+										updateText();
 									}
 								}
 							}
@@ -598,6 +609,8 @@ namespace StarterAssets {
 			Drunkenness += 0.2f;
 			Debug.Log("Drunkenness: " + Drunkenness);
 			audioSource.pitch = 1 - 0.5f/(1+Drunkenness);
+			cigs--;
+			updateText();
 
 			//intoxication += intoxicationAmount;
 			//intoxication = Mathf.Clamp(intoxication, 0, maxIntoxication);

@@ -482,7 +482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9eae928b5d141cbb1d2a34999e687b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationaryBandit
-  shootingRange: 15
   fireRate: 2
   damage: 15
   muzzleFlashPrefab: {fileID: 0}
@@ -5660,7 +5659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9eae928b5d141cbb1d2a34999e687b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationaryBandit
-  shootingRange: 15
   fireRate: 2
   damage: 15
   muzzleFlashPrefab: {fileID: 0}
@@ -6101,7 +6099,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9eae928b5d141cbb1d2a34999e687b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationaryBandit
-  shootingRange: 15
   fireRate: 2
   damage: 15
   muzzleFlashPrefab: {fileID: 0}
@@ -7339,7 +7336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9eae928b5d141cbb1d2a34999e687b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationaryBandit
-  shootingRange: 15
   fireRate: 2
   damage: 15
   muzzleFlashPrefab: {fileID: 0}
@@ -7629,7 +7625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9eae928b5d141cbb1d2a34999e687b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StationaryBandit
-  shootingRange: 15
   fireRate: 2
   damage: 15
   muzzleFlashPrefab: {fileID: 0}
@@ -8525,6 +8520,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: text
+      value: 
+      objectReference: {fileID: 1238515439}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: hurtText
       value: 
