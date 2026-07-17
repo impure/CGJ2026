@@ -138,7 +138,7 @@ namespace StarterAssets {
 
 		public void TryToSmoke()
 		{
-			if (!smoking)
+			if (!smoking && !reloading)
 			{
 				StartCoroutine(SmokeRoutine());
 			}
