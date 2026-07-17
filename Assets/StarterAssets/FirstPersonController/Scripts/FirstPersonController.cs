@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -113,6 +114,10 @@ namespace StarterAssets {
 		private float hitCooldown = 2.5f;
 		private float lastHitTime = 0f;
 
+		public GameObject hurtText;
+		public Image strawberryJam;
+		private float health = 100;
+
 		void OnControllerColliderHit(ControllerColliderHit hit) {
 			// 1. If we recently hit a wall, don't play the sound again yet (cooldown check)
 			if (Time.time < lastHitTime + hitCooldown) return;
@@ -157,6 +162,17 @@ namespace StarterAssets {
 				StopCoroutine(_flinchCoroutine);
 			}
 			_flinchCoroutine = StartCoroutine(FlinchEffect());
+			health -= 20;
+			updateHealthUi();
+		}
+
+		private void updateHealthUi() {
+			strawberryJam.color = new Color(1f, 0f, 0f, 0.5f - 0.5f*health / 100f);
+			if (health <= 50) {
+				hurtText.SetActive(true);
+			} else {
+				hurtText.SetActive(false);
+			}
 		}
 
 		private IEnumerator FlinchEffect() {
@@ -518,12 +534,27 @@ namespace StarterAssets {
 			}
 
 			cigarette.transform.localPosition = new Vector3(0, -0.34f, 0.446f);
-			yield return new WaitForSeconds(0.8f);
+			elapsed = 0f;
+			while (elapsed < 0.8f)
+			{
+				elapsed += Time.deltaTime * animationSpeed;
+				health += Time.deltaTime * 100;
+				if (health > 100) {
+					health = 100;
+				}
+				updateHealthUi();
+				yield return null;
+			}
 			elapsed = 0f;
 			while (elapsed < 1f)
 			{
 				elapsed += Time.deltaTime * animationSpeed;
 				transform.Rotate(Vector3.right * Time.deltaTime * 20);
+				health += Time.deltaTime * 100;
+				if (health > 100) {
+					health = 100;
+				}
+				updateHealthUi();
 				yield return null;
 			}
 
