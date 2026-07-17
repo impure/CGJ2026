@@ -79,7 +79,7 @@ public class StationaryBandit : MonoBehaviour
 		Vector3 direction = player.position - transform.position;
 
 		// Fire a raycast from the bandit's chest level
-		Vector3 startPoint = transform.position + Vector3.up * 0.25f;
+		Vector3 startPoint = transform.position + Vector3.up;
 
 		if (Physics.Raycast(transform.position, player.position - transform.position, out hit, 1000))
 		{
