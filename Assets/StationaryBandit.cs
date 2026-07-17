@@ -1,4 +1,5 @@
 using UnityEngine;
+using StarterAssets;
 
 public class StationaryBandit : MonoBehaviour
 {
@@ -111,5 +112,8 @@ public class StationaryBandit : MonoBehaviour
 		// Deal damage directly to your player's health script
 		//playerStats.TakeDamage(damage);
 		Debug.Log(gameObject.name + " shot the player!");
+		if (FirstPersonController.instance != null) {
+			FirstPersonController.instance.takeDamage();
+		}
 	}
 }

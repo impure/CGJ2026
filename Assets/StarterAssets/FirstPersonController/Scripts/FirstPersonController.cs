@@ -4,14 +4,13 @@ using UnityEngine.InputSystem;
 #endif
 using System.Collections;
 
-namespace StarterAssets
-{
+namespace StarterAssets {
+
 	[RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM
 	[RequireComponent(typeof(PlayerInput))]
 #endif
-	public class FirstPersonController : MonoBehaviour
-	{
+	public class FirstPersonController : MonoBehaviour {
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 4.0f;
@@ -102,7 +101,14 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
+		public static FirstPersonController instance;
+
 		private bool smoking = false, reloading = false;
+
+		// Flinch effect state
+		private float _flinchPitchOffset = 0f;
+		private float _flinchRollOffset = 0f;
+		private Coroutine _flinchCoroutine;
 
 		private float hitCooldown = 2.5f;
 		private float lastHitTime = 0f;
@@ -145,17 +151,54 @@ namespace StarterAssets
 			}
 		}
 
-		private void Awake()
-		{
+		public void takeDamage() {
+			Debug.Log("Player took damage");
+			if (_flinchCoroutine != null) {
+				StopCoroutine(_flinchCoroutine);
+			}
+			_flinchCoroutine = StartCoroutine(FlinchEffect());
+		}
+
+		private IEnumerator FlinchEffect() {
+			float duration = 0.25f; // Duration of the flinch
+			float elapsed = 0f;
+
+			// Kick camera up slightly (negative pitch) and tilt roll left/right
+			float targetPitchKick = Random.Range(-4f, 6f);
+			float targetRollKick = Random.Range(-5f, 5f);
+
+			while (elapsed < duration) {
+				elapsed += Time.deltaTime;
+				float t = elapsed / duration;
+
+				// Fast spike, then smooth decay back to zero
+				float intensity;
+				if (t < 0.15f) {
+					intensity = t / 0.15f;
+				} else {
+					intensity = 1f - (t - 0.15f) / 0.85f;
+				}
+
+				_flinchPitchOffset = targetPitchKick * intensity;
+				_flinchRollOffset = targetRollKick * intensity;
+
+				yield return null;
+			}
+
+			_flinchPitchOffset = 0f;
+			_flinchRollOffset = 0f;
+		}
+
+		private void Awake() {
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
+			instance = this;
 		}
 
-		private void Start()
-		{
+		private void Start() {
 			perlinOffset1 = new Vector2(Random.value * 1000f, Random.value * 1000f);
 			perlinOffset2 = new Vector2(Random.value * 1000f, Random.value * 1000f);
 			_controller = GetComponent<CharacterController>();
@@ -268,15 +311,13 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
-		private void GroundedCheck()
-		{
+		private void GroundedCheck() {
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 		}
 
-		private void CameraRotation()
-		{
+		private void CameraRotation() {
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
@@ -293,12 +334,11 @@ namespace StarterAssets
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
 
-			// Update Cinemachine camera target pitch and roll
-			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, _cameraRoll * Drunkenness);
+			// Update Cinemachine camera target pitch and roll (with flinch offsets)
+			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch + _flinchPitchOffset, 0.0f, (_cameraRoll * Drunkenness) + _flinchRollOffset);
 		}
 
-		private void Move()
-		{
+		private void Move() {
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
