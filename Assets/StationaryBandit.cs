@@ -8,7 +8,6 @@ public class StationaryBandit : MonoBehaviour
 	//private PlayerGameplay playerStats;
 
 	[Header("Combat Settings")]
-	public float shootingRange = 15f;
 	public float fireRate = 2f; // Seconds between shots
 	public float damage = 15f;
 	
@@ -50,14 +49,12 @@ public class StationaryBandit : MonoBehaviour
 		float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
 		// 2. If player is in range, rotate to face them and shoot on a timer
-		if (distanceToPlayer <= shootingRange) {
-			AimAtPlayer();
+		AimAtPlayer();
 
-			if (Time.time >= lastShotTime + fireRate) {
-				// Check if we have a clear line of sight (not shooting through saloon/canyon walls)
-				if (HasLineOfSight()) {
-					ShootPlayer();
-				}
+		if (Time.time >= lastShotTime + fireRate) {
+			// Check if we have a clear line of sight (not shooting through saloon/canyon walls)
+			if (HasLineOfSight()) {
+				ShootPlayer();
 			}
 		}
 	}
@@ -84,7 +81,7 @@ public class StationaryBandit : MonoBehaviour
 		// Fire a raycast from the bandit's chest level
 		Vector3 startPoint = transform.position + Vector3.up * 1.2f;
 
-		if (Physics.Raycast(transform.position, player.position - transform.position, out hit, shootingRange))
+		if (Physics.Raycast(transform.position, player.position - transform.position, out hit, 1000))
 		{
 			// If the first solid object we hit is the Player, we have a clear line of sight
 			if (hit.collider.CompareTag("Player"))
