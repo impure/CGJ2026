@@ -500,10 +500,16 @@ namespace StarterAssets {
 
 			// Move cigarette UP
 			float elapsed = 0f;
+			Quaternion idleRotation = Quaternion.identity;
+			Quaternion reloadRotation = Quaternion.Euler(30f, 0f, 0f);
+			Vector3 originalPosition = gunTransform.localPosition;
+			Vector3 reloadPosition = originalPosition - new Vector3(-0.1f, 0.15f, 0.1f);
 			while (elapsed < 1f)
 			{
 				elapsed += Time.deltaTime * animationSpeed;
 				cigarette.transform.localPosition = Vector3.Lerp(new Vector3(0, -0.34f, 0.446f), new Vector3(0, -0.14f, 0.446f), elapsed);
+				gunTransform.localRotation = Quaternion.Slerp(idleRotation, reloadRotation, elapsed);
+				gunTransform.localPosition = Vector3.Lerp(originalPosition, reloadPosition, elapsed);
 				yield return null;
 			}
 
@@ -555,12 +561,15 @@ namespace StarterAssets {
 					health = 100;
 				}
 				updateHealthUi();
+				gunTransform.localRotation = Quaternion.Slerp(reloadRotation, idleRotation, elapsed);
+				gunTransform.localPosition = Vector3.Lerp(reloadPosition, originalPosition, elapsed);
 				yield return null;
 			}
 
 			//health += healAmount;
 			//health = Mathf.Clamp(health, 0, maxHealth);
 
+			gunTransform.localRotation = idleRotation;
 			Drunkenness += 0.2f;
 			Debug.Log("Drunkenness: " + Drunkenness);
 			audioSource.pitch = 1 - 0.5f/(1+Drunkenness);
