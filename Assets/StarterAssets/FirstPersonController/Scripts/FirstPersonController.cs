@@ -606,7 +606,7 @@ namespace StarterAssets {
 			//health = Mathf.Clamp(health, 0, maxHealth);
 
 			gunTransform.localRotation = idleRotation;
-			Drunkenness += 0.2f;
+			Drunkenness += 1;
 			Debug.Log("Drunkenness: " + Drunkenness);
 			audioSource.pitch = 1 - 0.5f/(1+Drunkenness);
 			cigs--;
