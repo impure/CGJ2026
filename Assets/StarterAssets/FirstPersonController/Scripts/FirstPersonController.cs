@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -146,7 +147,7 @@ namespace StarterAssets {
 
 		public void TryToSmoke()
 		{
-			if (!smoking && !reloading)
+			if (!smoking && !reloading && cigs > 0)
 			{
 				StartCoroutine(SmokeRoutine());
 			}
@@ -172,6 +173,9 @@ namespace StarterAssets {
 			_flinchCoroutine = StartCoroutine(FlinchEffect());
 			health -= 20;
 			updateHealthUi();
+			if (health <= 0) {
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			}
 		}
 
 		private void updateHealthUi() {
